@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adisa Nureni Olaniyi - Elite Web Solutions</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles & Font */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Slate 50 */
+            color: #1e293b; /* Slate 900 */
+            line-height: 1.6;
+        }
+
+        /* Sticky Header Transition */
+        .navbar {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .navbar.scrolled {
+            background-color: rgba(255, 255, 255, 0.98); /* Near opaque white */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        /* Navigation Link Hover Effect */
+        .nav-link {
+            position: relative;
+            padding-bottom: 4px;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #3b82f6; /* Blue 500 */
+            transition: width 0.3s ease-in-out;
+        }
+
+        .nav-link:hover {
+            color: #3b82f6;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Primary Button Hover Effect */
+        .btn-primary {
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb; /* Blue 600 */
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.15), 0 5px 10px -5px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Card Hover Effect */
+        .card-hover-effect {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .card-hover-effect:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -8px rgba(0, 0, 0, 0.18), 0 8px 15px -8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Scroll Animation */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .scroll-animate.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Typing Effect for Hero Headline */
+        .typing-text {
+            display: inline-block;
+            overflow: hidden; /* Ensures the text is hidden until typed */
+            white-space: nowrap; /* Keeps text on a single line */
+            border-right: 3px solid; /* The blinking cursor */
+            animation: typing 3s steps(40, end) forwards, blink-caret .75s step-end infinite;
+            width: 0; /* Start with 0 width */
+        }
+
+        /* Keyframes for typing animation */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        /* Keyframes for blinking caret */
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: white; }
+        }
+
+        /* Skill Bar Animation */
+        .skill-bar-fill {
+            width: 0%;
+            transition: width 1.5s ease-out;
+        }
+        .skill-bar-fill.animate {
+            /* Width will be set by JS */
+        }
+
+
+        /* Testimonial Carousel styles */
+        .carousel-container {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother transition */
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        /* FAQ Accordion styles */
+        .accordion-header {
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .accordion-header:hover {
+            background-color: #f1f5f9; /* Slate 100 */
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s ease-out, padding 0.6s ease-out;
+        }
+
+        .accordion-content.open {
+            max-height: 500px; /* Adjust based on expected content height */
+            padding-top: 1.5rem; /* Increased padding */
+            padding-bottom: 1.5rem;
+        }
+
+        /* Back to Top Button */
+        #back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.85rem 1.2rem;
+            border-radius: 9999px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            opacity: 0;
+            transform: translateY(20px);
+            visibility: hidden;
+            z-index: 1000;
+        }
+
+        #back-to-top.show {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        /* Form input focus styles */
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav id="navbar" class="navbar bg-white p-4 md:p-6 rounded-b-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-2xl font-extrabold text-blue-600 rounded-md px-2 py-1">Adisa Olaniyi</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="text-gray-700 hover:text-blue-500 nav-link font-medium">Home</a>
+                <a href="#about" class="text-gray-700 hover:text-blue-500 nav-link font-medium">About</a>
+                <a href="#skills" class="text-gray-700 hover:text-blue-500 nav-link font-medium">Skills</a>
+                <a href="#portfolio" class="text-gray-700 hover:text-blue-500 nav-link font-medium">Portfolio</a>
+                <a href="#testimonials" class="text-gray-700 hover:text-blue-500 nav-link font-medium">Testimonials</a>
+                <a href="#faq" class="text-gray-700 hover:text-blue-500 nav-link font-medium">FAQ</a>
+                <a href="#contact" class="text-gray-700 hover:text-blue-500 nav-link font-medium">Contact</a>
+            </div>
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none p-2 rounded-md hover:bg-gray-100">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile Menu (hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 bg-white rounded-md shadow-lg py-2">
+            <a href="#home" class="block text-gray-700 hover:text-blue-500 nav-link font-medium px-4 py-2 rounded-md">Home</a>
+            <a href="#about" class="block text-gray-700 hover:text-blue-500 nav-link font-medium px-4 py-2 rounded-md">About</a>
+            <a href="#skills" class="block text-gray-700 hover:text-blue-500 nav-link font-medium px-4 py-2 rounded-md">Skills</a>
+            <a href="#portfolio" class="block text-gray-700 hover:text-blue-500 nav-link font-medium px-4 py-2 rounded-md">Portfolio</a>
+            <a href="#testimonials" class="block text-gray-700 hover:text-blue-500 nav-link font-medium px-4 py-2 rounded-md">Testimonials</a>
+            <a href="#faq" class="block text-gray-700 hover:text-blue-500 nav-link font-medium px-4 py-2 rounded-md">FAQ</a>
+            <a href="#contact" class="block text-gray-700 hover:text-blue-500 nav-link font-medium px-4 py-2 rounded-md">Contact</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <header id="home" class="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20 md:py-32 relative overflow-hidden">
+            <!-- Subtle background pattern/overlay -->
+            <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM12 14v-4h-2v4H6v2h4v4h2v-4h4v-2h-4zm0 0v-4h-2v4H6v2h4v4h2v-4h4v-2h-4z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+            <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+                <div class="text-center md:text-left md:w-1/2 scroll-animate">
+                    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4 drop-shadow-lg">
+                        <span class="typing-text" data-text="Crafting Elite Web Experiences"></span>
+                    </h1>
+                    <p class="text-lg md:text-xl max-w-3xl mx-auto md:mx-0 mb-8 opacity-90">
+                        As Adisa Nureni Olaniyi, I specialize in architecting cutting-edge web solutions that are
+                        performant, user-centric, and designed for sustainable growth.
+                    </p>
+                    <a href="#portfolio" class="btn-primary bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-full shadow-lg inline-block mr-4">
+                        View Portfolio
+                    </a>
+                    <a href="#contact" class="btn-primary bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 font-semibold py-3 px-8 rounded-full shadow-lg inline-block">
+                        Get In Touch
+                    </a>
+                </div>
+                <div class="md:w-1/2 mt-8 md:mt-0 flex justify-center scroll-animate" style="--scroll-delay: 0.2s;">
+                    <img src="https://placehold.co/600x400/60a5fa/ffffff?text=Innovative+Solutions" alt="Innovative Web Solutions Illustration" class="rounded-xl shadow-2xl max-w-full h-auto object-cover">
+                </div>
+            </div>
+        </header>
+
+        <!-- About Me Section -->
+        <section id="about" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2 scroll-animate">
+                    <img src="https://placehold.co/600x400/a78bfa/ffffff?text=Adisa+Nureni+Olaniyi" alt="Adisa Nureni Olaniyi Profile" class="rounded-xl shadow-lg max-w-full h-auto object-cover">
+                </div>
+                <div class="md:w-1/2 text-center md:text-left scroll-animate" style="--scroll-delay: 0.2s;">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-gray-800">
+                        About Adisa Nureni Olaniyi
+                    </h2>
+                    <p class="text-lg text-gray-600 leading-relaxed mb-6">
+                        With over a decade of hands-on experience in web development, I am a seasoned professional dedicated to transforming complex ideas into elegant, high-performing digital products. My journey has been marked by a relentless pursuit of excellence, combining deep technical expertise with a keen eye for user experience and modern design principles.
+                    </p>
+                    <p class="text-lg text-gray-600 leading-relaxed">
+                        I thrive on challenges and am passionate about building solutions that not only meet but exceed client expectations, ensuring scalability, maintainability, and a delightful user journey. Let's collaborate to bring your next big idea to life.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills & Expertise Section -->
+        <section id="skills" class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800 scroll-animate">
+                    My Core Skills & Expertise
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Skill Item 1 -->
+                    <div class="bg-white p-6 rounded-xl shadow-md scroll-animate card-hover-effect">
+                        <h3 class="text-xl font-semibold mb-3 text-gray-800">Front-End Development</h3>
+                        <div class="mb-2 text-gray-600">HTML5, CSS3 (Tailwind CSS), JavaScript</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="skill-bar-fill bg-blue-500 h-2.5 rounded-full" data-progress="95"></div>
+                        </div>
+                    </div>
+                    <!-- Skill Item 2 -->
+                    <div class="bg-white p-6 rounded-xl shadow-md scroll-animate card-hover-effect" style="--scroll-delay: 0.1s;">
+                        <h3 class="text-xl font-semibold mb-3 text-gray-800">JavaScript Frameworks</h3>
+                        <div class="mb-2 text-gray-600">React, Vue.js (Basic)</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="skill-bar-fill bg-blue-500 h-2.5 rounded-full" data-progress="90"></div>
+                        </div>
+                    </div>
+                    <!-- Skill Item 3 -->
+                    <div class="bg-white p-6 rounded-xl shadow-md scroll-animate card-hover-effect" style="--scroll-delay: 0.2s;">
+                        <h3 class="text-xl font-semibold mb-3 text-gray-800">Back-End Development</h3>
+                        <div class="mb-2 text-gray-600">Node.js, Express, Python (Flask/Django)</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="skill-bar-fill bg-blue-500 h-2.5 rounded-full" data-progress="80"></div>
+                        </div>
+                    </div>
+                    <!-- Skill Item 4 -->
+                    <div class="bg-white p-6 rounded-xl shadow-md scroll-animate card-hover-effect" style="--scroll-delay: 0.3s;">
+                        <h3 class="text-xl font-semibold mb-3 text-gray-800">Database Management</h3>
+                        <div class="mb-2 text-gray-600">MongoDB, PostgreSQL, MySQL</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="skill-bar-fill bg-blue-500 h-2.5 rounded-full" data-progress="85"></div>
+                        </div>
+                    </div>
+                    <!-- Skill Item 5 -->
+                    <div class="bg-white p-6 rounded-xl shadow-md scroll-animate card-hover-effect" style="--scroll-delay: 0.4s;">
+                        <h3 class="text-xl font-semibold mb-3 text-gray-800">Cloud & DevOps</h3>
+                        <div class="mb-2 text-gray-600">AWS (EC2, S3), Docker, Git</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="skill-bar-fill bg-blue-500 h-2.5 rounded-full" data-progress="75"></div>
+                        </div>
+                    </div>
+                    <!-- Skill Item 6 -->
+                    <div class="bg-white p-6 rounded-xl shadow-md scroll-animate card-hover-effect" style="--scroll-delay: 0.5s;">
+                        <h3 class="text-xl font-semibold mb-3 text-gray-800">UI/UX & Design</h3>
+                        <div class="mb-2 text-gray-600">Figma, Adobe XD, Responsive Design</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="skill-bar-fill bg-blue-500 h-2.5 rounded-full" data-progress="90"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800 scroll-animate">
+                    My Recent Projects
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project Card 1 -->
+                    <div class="relative group rounded-xl shadow-lg overflow-hidden card-hover-effect scroll-animate">
+                        <img src="https://placehold.co/600x400/3b82f6/ffffff?text=Project+Alpha" alt="Project Alpha" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
+                            <h3 class="text-2xl font-bold text-white mb-2">Project Alpha</h3>
+                            <p class="text-white text-center mb-4">A high-performance e-commerce platform built with React & Node.js.</p>
+                            <a href="#" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">View Project</a>
+                        </div>
+                    </div>
+                    <!-- Project Card 2 -->
+                    <div class="relative group rounded-xl shadow-lg overflow-hidden card-hover-effect scroll-animate" style="--scroll-delay: 0.1s;">
+                        <img src="https://placehold.co/600x400/60a5fa/ffffff?text=Project+Beta" alt="Project Beta" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
+                            <h3 class="text-2xl font-bold text-white mb-2">Project Beta</h3>
+                            <p class="text-white text-center mb-4">A responsive corporate website focusing on modern UI/UX.</p>
+                            <a href="#" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">View Project</a>
+                        </div>
+                    </div>
+                    <!-- Project Card 3 -->
+                    <div class="relative group rounded-xl shadow-lg overflow-hidden card-hover-effect scroll-animate" style="--scroll-delay: 0.2s;">
+                        <img src="https://placehold.co/600x400/34d399/ffffff?text=Project+Gamma" alt="Project Gamma" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
+                            <h3 class="text-2xl font-bold text-white mb-2">Project Gamma</h3>
+                            <p class="text-white text-center mb-4">A data visualization dashboard built with D3.js and Flask.</p>
+                            <a href="#" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">View Project</a>
+                        </div>
+                    </div>
+                    <!-- Project Card 4 -->
+                    <div class="relative group rounded-xl shadow-lg overflow-hidden card-hover-effect scroll-animate" style="--scroll-delay: 0.3s;">
+                        <img src="https://placehold.co/600x400/fcd34d/ffffff?text=Project+Delta" alt="Project Delta" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
+                            <h3 class="text-2xl font-bold text-white mb-2">Project Delta</h3>
+                            <p class="text-white text-center mb-4">A mobile-first progressive web app for task management.</p>
+                            <a href="#" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">View Project</a>
+                        </div>
+                    </div>
+                    <!-- Project Card 5 -->
+                    <div class="relative group rounded-xl shadow-lg overflow-hidden card-hover-effect scroll-animate" style="--scroll-delay: 0.4s;">
+                        <img src="https://placehold.co/600x400/a855f7/ffffff?text=Project+Epsilon" alt="Project Epsilon" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
+                            <h3 class="text-2xl font-bold text-white mb-2">Project Epsilon</h3>
+                            <p class="text-white text-center mb-4">A custom CRM solution for small businesses.</p>
+                            <a href="#" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">View Project</a>
+                        </div>
+                    </div>
+                    <!-- Project Card 6 -->
+                    <div class="relative group rounded-xl shadow-lg overflow-hidden card-hover-effect scroll-animate" style="--scroll-delay: 0.5s;">
+                        <img src="https://placehold.co/600x400/ef4444/ffffff?text=Project+Zeta" alt="Project Zeta" class="w-full h-64 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
+                            <h3 class="text-2xl font-bold text-white mb-2">Project Zeta</h3>
+                            <p class="text-white text-center mb-4">A secure authentication service with multi-factor auth.</p>
+                            <a href="#" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition-colors">View Project</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section class="py-16 md:py-24 bg-blue-700 text-white text-center rounded-lg mx-4 md:mx-auto max-w-6xl shadow-xl scroll-animate">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-5xl font-extrabold mb-6 drop-shadow-md">
+                    Ready to Elevate Your Online Presence?
+                </h2>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto mb-10 opacity-90">
+                    Let's discuss how my expertise can transform your vision into a powerful digital asset.
+                </p>
+                <a href="#contact" class="btn-primary bg-white text-blue-700 hover:bg-gray-100 font-bold py-4 px-10 rounded-full text-xl shadow-lg inline-block">
+                    Start Your Project Today
+                </a>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4 scroll-animate">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800">
+                    What Clients Say
+                </h2>
+                <div class="carousel-container relative max-w-4xl mx-auto">
+                    <div class="carousel-track flex">
+                        <!-- Testimonial 1 -->
+                        <div class="carousel-item p-6 md:p-8 bg-gray-50 rounded-xl shadow-md mx-4 flex-shrink-0 text-center">
+                            <p class="text-lg text-gray-700 italic mb-6">
+                                "Adisa delivered an outstanding website that exceeded our expectations.
+                                His attention to detail and commitment to quality are truly remarkable.
+                                Highly recommended!"
+                            </p>
+                            <div class="flex flex-col md:flex-row items-center justify-center">
+                                <img src="https://placehold.co/60x60/a78bfa/ffffff?text=C1" alt="Client 1" class="w-14 h-14 rounded-full mb-2 md:mb-0 md:mr-4 object-cover">
+                                <div>
+                                    <p class="font-semibold text-gray-800">Client Name 1</p>
+                                    <p class="text-sm text-gray-500">CEO, Company A</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Testimonial 2 -->
+                        <div class="carousel-item p-6 md:p-8 bg-gray-50 rounded-xl shadow-md mx-4 flex-shrink-0 text-center">
+                            <p class="text-lg text-gray-700 italic mb-6">
+                                "Working with Adisa was a pleasure. He understood our vision perfectly
+                                and brought it to life with a beautiful and highly functional website.
+                                Professional and reliable!"
+                            </p>
+                            <div class="flex flex-col md:flex-row items-center justify-center">
+                                <img src="https://placehold.co/60x60/60a5fa/ffffff?text=C2" alt="Client 2" class="w-14 h-14 rounded-full mb-2 md:mb-0 md:mr-4 object-cover">
+                                <div>
+                                    <p class="font-semibold text-gray-800">Client Name 2</p>
+                                    <p class="text-sm text-gray-500">Founder, Startup B</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Testimonial 3 -->
+                        <div class="carousel-item p-6 md:p-8 bg-gray-50 rounded-xl shadow-md mx-4 flex-shrink-0 text-center">
+                            <p class="text-lg text-gray-700 italic mb-6">
+                                "The performance improvements Adisa implemented were incredible. Our site
+                                loads faster than ever, and our users are having a much better experience.
+                                A true expert!"
+                            </p>
+                            <div class="flex flex-col md:flex-row items-center justify-center">
+                                <img src="https://placehold.co/60x60/34d399/ffffff?text=C3" alt="Client 3" class="w-14 h-14 rounded-full mb-2 md:mb-0 md:mr-4 object-cover">
+                                <div>
+                                    <p class="font-semibold text-gray-800">Client Name 3</p>
+                                    <p class="text-sm text-gray-500">Marketing Manager, Corp C</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Carousel Navigation Buttons -->
+                    <button id="prev-testimonial" class="absolute left-0 top-1/2 -translate-y-1/2 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors hidden md:block">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button id="next-testimonial" class="absolute right-0 top-1/2 -translate-y-1/2 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition-colors hidden md:block">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+                <div class="flex justify-center mt-8 space-x-2" id="carousel-dots">
+                    <!-- Dots will be inserted here by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section (Accordion) -->
+        <section id="faq" class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-4 max-w-3xl scroll-animate">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800">
+                    Frequently Asked Questions
+                </h2>
+
+                <div class="space-y-4">
+                    <!-- FAQ Item 1 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="accordion-header flex justify-between items-center p-6 text-lg font-semibold text-gray-800">
+                            <span>What kind of websites do you build?</span>
+                            <svg class="w-6 h-6 text-blue-500 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="accordion-content px-6 text-gray-600">
+                            <p>I specialize in building custom websites, including responsive landing pages, business websites, portfolios, and small e-commerce sites. My focus is on modern, performant, and user-friendly solutions.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 2 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="accordion-header flex justify-between items-center p-6 text-lg font-semibold text-gray-800">
+                            <span>What technologies do you use?</span>
+                            <svg class="w-6 h-6 text-blue-500 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="accordion-content px-6 text-gray-600">
+                            <p>My primary stack includes HTML, CSS (with Tailwind CSS for rapid development), and JavaScript. For more complex applications, I can work with frameworks like React. I also focus on clean, semantic HTML and accessibility.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Item 3 -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="accordion-header flex justify-between items-center p-6 text-lg font-semibold text-gray-800">
+                            <span>What is your development process?</span>
+                            <svg class="w-6 h-6 text-blue-500 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="accordion-content px-6 text-gray-600">
+                            <p>My process typically involves initial consultation, planning and wireframing, design mockups, development, testing, deployment, and optional ongoing maintenance. I believe in clear communication throughout the project.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section with Form -->
+        <section id="contact" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4 max-w-2xl scroll-animate">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-6 text-gray-800">
+                    Let's Connect
+                </h2>
+                <p class="text-lg text-gray-600 text-center mb-8">
+                    Ready to start your next web project? Fill out the form below, and I'll get back to you shortly.
+                </p>
+
+                <form id="contact-form" class="bg-gray-50 p-8 rounded-xl shadow-md space-y-6">
+                    <div>
+                        <label for="name" class="block text-gray-700 text-sm font-semibold mb-2">Name</label>
+                        <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-blue-500" placeholder="Your Name" required>
+                        <p class="text-red-500 text-xs mt-1 hidden" id="name-error">Name is required.</p>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-700 text-sm font-semibold mb-2">Email</label>
+                        <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-blue-500" placeholder="your.email@example.com" required>
+                        <p class="text-red-500 text-xs mt-1 hidden" id="email-error">Please enter a valid email address.</p>
+                    </div>
+                    <div>
+                        <label for="subject" class="block text-gray-700 text-sm font-semibold mb-2">Subject</label>
+                        <input type="text" id="subject" name="subject" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-blue-500" placeholder="Project Inquiry, Collaboration, etc.">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-gray-700 text-sm font-semibold mb-2">Message</label>
+                        <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:border-blue-500 focus:ring-blue-500" placeholder="Tell me about your project or inquiry..." required></textarea>
+                        <p class="text-red-500 text-xs mt-1 hidden" id="message-error">Message is required.</p>
+                    </div>
+                    <button type="submit" class="btn-primary w-full bg-blue-600 text-white font-semibold py-3 rounded-md shadow-lg">
+                        Send Message
+                    </button>
+                    <div id="form-message" class="mt-4 p-3 rounded-md text-center hidden"></div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 text-center rounded-t-lg shadow-inner">
+        <div class="container mx-auto px-4">
+            <p class="text-sm md:text-base">&copy; 2025 Adisa Nureni Olaniyi. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="flex items-center justify-center">
+        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+        Top
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Mobile Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // --- Sticky Header with Shrink/Change ---
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) { // Adjust scroll threshold as needed
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // --- Smooth Scrolling for Anchor Links ---
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                        // Close mobile menu after clicking a link
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+
+            // --- Scroll Animation (Intersection Observer) ---
+            const animateElements = document.querySelectorAll('.scroll-animate');
+            const observerOptions = {
+                root: null, // viewport
+                rootMargin: '0px',
+                threshold: 0.1 // 10% of element visible
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const delay = parseFloat(entry.target.style.getPropertyValue('--scroll-delay') || '0');
+                        setTimeout(() => {
+                            entry.target.classList.add('is-visible');
+                            // If it's a skill bar, trigger its animation
+                            if (entry.target.querySelector('.skill-bar-fill')) {
+                                const skillBar = entry.target.querySelector('.skill-bar-fill');
+                                const progress = skillBar.dataset.progress;
+                                skillBar.style.width = `${progress}%`;
+                            }
+                        }, delay * 1000); // Convert delay to milliseconds
+                        observer.unobserve(entry.target); // Stop observing once visible
+                    }
+                });
+            }, observerOptions);
+
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+
+            // --- Hero Typing Effect ---
+            const typingTextElement = document.querySelector('.typing-text');
+            if (typingTextElement) {
+                const text = typingTextElement.dataset.text;
+                typingTextElement.textContent = ''; // Clear initial text
+                let i = 0;
+                const speed = 70; // Typing speed in milliseconds
+
+                function typeWriter() {
+                    if (i < text.length) {
+                        typingTextElement.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, speed);
+                    } else {
+                        // Optionally remove cursor after typing
+                        typingTextElement.style.borderRight = 'none';
+                    }
+                }
+                // Start typing after a short delay to allow page load
+                setTimeout(typeWriter, 500);
+            }
+
+            // --- Testimonial Carousel ---
+            const carouselTrack = document.querySelector('.carousel-track');
+            const carouselItems = document.querySelectorAll('.carousel-item');
+            const prevButton = document.getElementById('prev-testimonial');
+            const nextButton = document.getElementById('next-testimonial');
+            const carouselDotsContainer = document.getElementById('carousel-dots');
+            let currentIndex = 0;
+            let autoAdvanceInterval;
+            const AUTO_ADVANCE_TIME = 5000; // 5 seconds
+            const PAUSE_AFTER_MANUAL = 8000; // 8 seconds pause after manual interaction
+
+            function updateCarousel() {
+                // Calculate item width including margins for accurate positioning
+                // Ensure carousel items are block-level or flex-items to get correct offsetWidth
+                if (carouselItems.length === 0) return; // Guard against empty carousel
+                const itemWidth = carouselItems[0].offsetWidth + (parseFloat(getComputedStyle(carouselItems[0]).marginLeft) * 2);
+                carouselTrack.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+                updateDots();
+            }
+
+            function nextTestimonial() {
+                currentIndex = (currentIndex + 1) % carouselItems.length;
+                updateCarousel();
+            }
+
+            function prevTestimonial() {
+                currentIndex = (currentIndex - 1 + carouselItems.length) % carouselItems.length;
+                updateCarousel();
+            }
+
+            function startAutoAdvance() {
+                clearInterval(autoAdvanceInterval); // Clear any existing interval
+                autoAdvanceInterval = setInterval(nextTestimonial, AUTO_ADVANCE_TIME);
+            }
+
+            function pauseAndRestartAutoAdvance() {
+                clearInterval(autoAdvanceInterval);
+                setTimeout(startAutoAdvance, PAUSE_AFTER_MANUAL);
+            }
+
+            function createDots() {
+                carouselDotsContainer.innerHTML = ''; // Clear existing dots
+                carouselItems.forEach((_, index) => {
+                    const dot = document.createElement('button');
+                    dot.classList.add('w-3', 'h-3', 'rounded-full', 'bg-gray-300', 'hover:bg-blue-400', 'transition-colors');
+                    dot.addEventListener('click', () => {
+                        currentIndex = index;
+                        updateCarousel();
+                        pauseAndRestartAutoAdvance(); // Pause and restart on manual dot click
+                    });
+                    carouselDotsContainer.appendChild(dot);
+                });
+                updateDots();
+            }
+
+            function updateDots() {
+                const dots = carouselDotsContainer.querySelectorAll('button');
+                dots.forEach((dot, index) => {
+                    if (index === currentIndex) {
+                        dot.classList.remove('bg-gray-300', 'hover:bg-blue-400');
+                        dot.classList.add('bg-blue-500');
+                    } else {
+                        dot.classList.remove('bg-blue-500');
+                        dot.classList.add('bg-gray-300', 'hover:bg-blue-400');
+                    }
+                });
+            }
+
+            if (carouselItems.length > 0) {
+                prevButton.addEventListener('click', () => {
+                    prevTestimonial();
+                    pauseAndRestartAutoAdvance(); // Pause and restart on manual prev click
+                });
+                nextButton.addEventListener('click', () => {
+                    nextTestimonial();
+                    pauseAndRestartAutoAdvance(); // Pause and restart on manual next click
+                });
+                window.addEventListener('resize', updateCarousel); // Recalculate on resize
+                createDots(); // Initialize dots
+                updateCarousel(); // Initial positioning
+                startAutoAdvance(); // Start auto advance
+            }
+
+
+            // --- FAQ Accordion ---
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('svg');
+
+                    // Close all other open accordions
+                    accordionHeaders.forEach(otherHeader => {
+                        if (otherHeader !== header) {
+                            otherHeader.nextElementSibling.classList.remove('open');
+                            otherHeader.querySelector('svg').classList.remove('rotate-180');
+                        }
+                    });
+
+                    // Toggle current accordion
+                    content.classList.toggle('open');
+                    icon.classList.toggle('rotate-180');
+                });
+            });
+
+            // --- Contact Form Validation ---
+            const contactForm = document.getElementById('contact-form');
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const messageInput = document.getElementById('message');
+            const nameError = document.getElementById('name-error');
+            const emailError = document.getElementById('email-error');
+            const messageError = document.getElementById('message-error');
+            const formMessage = document.getElementById('form-message');
+
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(String(email).toLowerCase());
+            }
+
+            contactForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                let isValid = true;
+
+                // Validate Name
+                if (nameInput.value.trim() === '') {
+                    nameError.classList.remove('hidden');
+                    nameInput.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    nameError.classList.add('hidden');
+                    nameInput.classList.remove('border-red-500');
+                }
+
+                // Validate Email
+                if (!validateEmail(emailInput.value.trim())) {
+                    emailError.classList.remove('hidden');
+                    emailInput.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    emailError.classList.add('hidden');
+                    emailInput.classList.remove('border-red-500');
+                }
+
+                // Validate Message
+                if (messageInput.value.trim() === '') {
+                    messageError.classList.remove('hidden');
+                    messageInput.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    messageError.classList.add('hidden');
+                    messageInput.classList.remove('border-red-500');
+                }
+
+                if (isValid) {
+                    // In a real application, you would send this data to a server
+                    // For demonstration, we'll just show a success message.
+                    formMessage.classList.remove('hidden', 'bg-red-100', 'text-red-700');
+                    formMessage.classList.add('bg-green-100', 'text-green-700');
+                    formMessage.textContent = 'Thank you for your message! I will get back to you soon.';
+                    contactForm.reset(); // Clear the form
+                    // Hide message after a few seconds
+                    setTimeout(() => {
+                        formMessage.classList.add('hidden');
+                    }, 5000);
+                } else {
+                    formMessage.classList.remove('hidden', 'bg-green-100', 'text-green-700');
+                    formMessage.classList.add('bg-red-100', 'text-red-700');
+                    formMessage.textContent = 'Please correct the errors in the form.';
+                }
+            });
+
+            // --- Back to Top Button ---
+            const backToTopButton = document.getElementById('back-to-top');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) { // Show button after scrolling 300px
+                    backToTopButton.classList.add('show');
+                } else {
+                    backToTopButton.classList.remove('show');
+                }
+            });
+
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
